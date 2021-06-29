@@ -7,14 +7,14 @@ import { Product } from "../model/product.model";
 @Injectable({
     providedIn: 'root'
   })
-export class ProductsServices{
+export class ProductService {
 
     constructor(private http:HttpClient){
     }
 
     getAllProducts():Observable<Product[]>{
-        // let host=(Math.random()>0.2)?environment.host:environment.loadhost;
-      let host= environment.host;
+         let host=(Math.random()>0.2)?environment.host:environment.loadhost;
+      //let host= environment.host;
         return this.http.get<Product[]>(host+"/products");
     }
     getSelectedProducts():Observable<Product[]>{
@@ -31,30 +31,23 @@ export class ProductsServices{
       return this.http.get<Product[]>(host+"/products?name_like="+keyword);
     }
 
-    selectProducts(product:Product):Observable<Product>{
-      let host=environment.host
-      product.selected=!product.selected;
-      return this.http.put<Product>(host+"/products/"+product.id,product);
+    public setSelected(product:Product):Observable<Product>{
+      return this.http.put<Product>(environment.host+"/products/"+product.id,{...product,selected:!product.selected});
     }
 
-    deleteProduct(product:Product):Observable<void>{
-      let host=environment.host
-      product.selected=!product.selected;
-      return this.http.delete<void>(host+"/products/"+product.id);
+    deleteProduct(id:number):Observable<void>{
+      return this.http.delete<void>(environment.host+"/products/"+id);
     }
 
     saveProduct(product:Product):Observable<Product>{
-      let host=environment.host
-      return this.http.post<Product>(host+"/products",product);
+      return this.http.post<Product>(environment.host+"/products/",product);
     }
 
-    getProduct(id:number):Observable<Product>{
-      let host=environment.host
-      return this.http.get<Product>(host+"/products/"+id);
+    getProductById(id:number):Observable<Product>{
+      return this.http.get<Product>(environment.host+"/products/"+id);
     }
 
     updateProduct(product:Product):Observable<Product>{
-      let host=environment.host
-      return this.http.put<Product>(host+"/products/"+product.id,product);
+      return this.http.put<Product>(environment.host+"/products/"+product.id,product);
     }
 }
